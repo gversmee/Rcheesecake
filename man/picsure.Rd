@@ -11,9 +11,9 @@ picsure(env, key, var, subset = "ALL", verbose = FALSE)
 
 \item{key}{The key or the token to log in your environment}
 
-\item{var}{A vector with the variables of interest (full paths with forward slashes). If an argument corresponds to a node, it will return all the variables below the node}
+\item{var}{A vector with the variables of interest. You can put a variable, or a path, as you want. You can also use the {*} key if you want to use a wild card. If an argument corresponds to a node, it will return all the variables below the node}
 
-\item{subset}{By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets}
+\item{subset}{By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets. !! Similarly, the "subsetting" part needs to be slightly modified to handle the "find" function from picsure.}
 
 \item{verbose}{By default, {verbose = FALSE}. Set it to {verbose = TRUE} to get the log informations}
 }
@@ -27,8 +27,8 @@ For this beta version, it is only possible to query phenotypics data. Soon, the 
 Without any subset, will return all the patients that have at least one value for a variable of interest
 environment <- "https://nhanes.hms.harvard.edu"
 key <- "yourkeyortoken"
-pcb <- "laboratory/pcbs/PCB153 (ng per g)"
-age <- "demographics/AGE/"
+pcb <- "PCB153 (ng per g)"
+age <- "AGE*"
 sex <- "demographics/SEX"
 variables <- c(pcb, sex, age)
 picsure(environment, key, variables)
@@ -43,5 +43,5 @@ picsure(environment, key, variables, subset)
 
 }
 \author{
-Gregoire Versmee, Laura Versmee, Mikael Dusenne
+Gregoire Versmee, Laura Versmee, Mikael Dusenne, Alba Gutierrez
 }

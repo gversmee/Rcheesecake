@@ -21,7 +21,6 @@ flatten.tree <- function(env, nodelist, token, verbose = FALSE)  {
                                 },
                   USE.NAMES = FALSE))
   }
-
   return(as.vector(f((nodelist))))
 }
 

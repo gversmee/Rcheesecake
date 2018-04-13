@@ -2,18 +2,18 @@
 #' @description For this beta version, it is only possible to query phenotypics data. Soon, the package will be upgraded to be able to query genotypics data from Hail.
 #' @param env  The URL of the environment
 #' @param key The key or the token to log in your environment
-#' @param var  A vector with the variables of interest (full paths with forward slashes). If an argument corresponds to a node, it will return all the variables below the node
-#' @param subset  By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets
+#' @param var  A vector with the variables of interest. You can put a variable, or a path, as you want. You can also use the {*} key if you want to use a wild card. If an argument corresponds to a node, it will return all the variables below the node
+#' @param subset  By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets. !! Similarly, the "subsetting" part needs to be slightly modified to handle the "find" function from picsure.
 #' @param verbose By default, {verbose = FALSE}. Set it to {verbose = TRUE} to get the log informations
 #' @return Returns a data.frame
-#' @author Gregoire Versmee, Laura Versmee, Mikael Dusenne
+#' @author Gregoire Versmee, Laura Versmee, Mikael Dusenne, Alba Gutierrez
 #' @export picsure
 #' @examples
 #' Without any subset, will return all the patients that have at least one value for a variable of interest
 #' environment <- "https://nhanes.hms.harvard.edu"
 #' key <- "yourkeyortoken"
-#' pcb <- "laboratory/pcbs/PCB153 (ng per g)"
-#' age <- "demographics/AGE/"
+#' pcb <- "PCB153 (ng per g)"
+#' age <- "AGE*"
 #' sex <- "demographics/SEX"
 #' variables <- c(pcb, sex, age)
 #' picsure(environment, key, variables)
@@ -29,6 +29,8 @@
 #' @import httr
 
 picsure <- function(env, key, var, subset = "ALL", verbose = FALSE) {
+
+  httr::set_config(httr::config(ssl_verifypeer = 0L, ssl_verifyhost = 0L, ssl_verifystatus  = 0L))
 
   # Is it a key or a token?
   if (nchar(key) < 27)  {
