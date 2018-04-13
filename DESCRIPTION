@@ -1,4 +1,4 @@
-Package: Rcheesecake
+Package: picsuRe
 Title: Query A Study Through The PIC-SURE API
 Version: 0.99
 Authors@R: c(person("Gregoire", "Versmee", email = "gversmee@mail.harvard.edu", role = c("aut", "cre")),person("Laura", "Versmee", role = c("aut")))
