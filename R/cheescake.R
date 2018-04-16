@@ -30,8 +30,6 @@
 
 picsure <- function(env, key, var, subset = "ALL", verbose = FALSE) {
 
-  httr::set_config(httr::config(ssl_verifypeer = 0L, ssl_verifyhost = 0L, ssl_verifystatus  = 0L))
-
   # Is it a key or a token?
   if (nchar(key) < 27)  {
     if (verbose)  message(paste("Key detected, starting a session on", env))
