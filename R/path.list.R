@@ -13,7 +13,7 @@ path.list <- function(env, var, token, verbose = FALSE) {
 
   pathlist <- sapply(var, function(e) {
     path <- content.get(paste0(env, "/rest/v1/resourceService/find?term=", gsub("\\*", "%", basename(e))), token)
-    path <- unlist(sapply(path, "[", 1))
+    path <- as.character(sapply(path, "[", 1))
     if (dirname(e) != ".")  path <- path[grepl(URLencode(dirname(e), reserved = TRUE), sapply(path, URLencode, reserved = TRUE))]
     return(path)
   })
