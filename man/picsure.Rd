@@ -4,7 +4,7 @@
 \alias{picsure}
 \title{Query your study via the PIC-SURE API}
 \usage{
-picsure(env, key, var, subset = "ALL", verbose = FALSE)
+picsure(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{env}{The URL of the environment}
@@ -14,6 +14,8 @@ picsure(env, key, var, subset = "ALL", verbose = FALSE)
 \item{var}{A vector with the variables of interest. You can put a variable, or a path, as you want. You can also use the {*} key if you want to use a wild card. If an argument corresponds to a node, it will return all the variables below the node}
 
 \item{subset}{By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets. !! Similarly, the "subsetting" part needs to be slightly modified to handle the "find" function from picsure.}
+
+\item{gabe}{if TRUE, will export the JSON query as a query.txt file in you working directory. By default, gabe = FALSE}
 
 \item{verbose}{By default, {verbose = FALSE}. Set it to {verbose = TRUE} to get the log informations}
 }
