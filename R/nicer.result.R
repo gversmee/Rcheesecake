@@ -21,7 +21,7 @@ nicer.result <- function(result, verbose = FALSE)  {
   for (i in 2:length(groups2))  {
     subdf <- result[which(groups == groups2[i])]
 
-    if (length(unique(subdf[,1])) == 2  & any(is.na(unique(subdf[,1]))))  {
+    if (length(unique(subdf[,1])) <= 2  & any(is.na(unique(subdf[,1]))))  {
       subdf[is.na(subdf)] <- ""
       col <- as.factor(apply(subdf, 1, paste0, collapse = ""))
       final <- cbind(final, col)

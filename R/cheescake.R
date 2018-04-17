@@ -4,6 +4,7 @@
 #' @param key The key or the token to log in your environment
 #' @param var  A vector with the variables of interest. You can put a variable, or a path, as you want. You can also use the {*} key if you want to use a wild card. If an argument corresponds to a node, it will return all the variables below the node
 #' @param subset  By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets. !! Similarly, the "subsetting" part needs to be slightly modified to handle the "find" function from picsure.
+#' @param gabe if TRUE, will export the JSON query as a query.txt file in you working directory. By default, gabe = FALSE
 #' @param verbose By default, {verbose = FALSE}. Set it to {verbose = TRUE} to get the log informations
 #' @return Returns a data.frame
 #' @author Gregoire Versmee, Laura Versmee, Mikael Dusenne, Alba Gutierrez
@@ -28,9 +29,7 @@
 #'
 #' @import httr
 
-picsure <- function(env, key, var, subset = "ALL", verbose = FALSE) {
-
-  httr::set_config(httr::config(ssl_verifypeer = 0L, ssl_verifyhost = 0L, ssl_verifystatus  = 0L))
+picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE) {
 
   # Is it a key or a token?
   if (nchar(key) < 27)  {
@@ -72,6 +71,11 @@ picsure <- function(env, key, var, subset = "ALL", verbose = FALSE) {
     # combine select and where
       if (verbose)  message('\nCombining the "select" and "where" part of the query to build the json body')
       body <- paste0(select, where)
+
+      if (gabe) {
+        message(paste("Exporting the json query to", getwd()))
+        write.table(body, "query.txt", quote = FALSE, row.names = FALSE, col.names = FALSE)
+      }
 
   # run the query
       # get the result ID
