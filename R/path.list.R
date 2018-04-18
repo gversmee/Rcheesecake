@@ -23,7 +23,7 @@ path.list <- function(env, var, token, verbose = FALSE) {
   if (length(pathlist) != 0)  {
 
     if (verbose)  sapply(pathlist, message)
-    return(unlist(pathlist))
+    return(pathlist)
 
     } else {
 
@@ -62,7 +62,8 @@ path.list <- function(env, var, token, verbose = FALSE) {
       pui <- pui[which(grepl (st, pui, fixed = TRUE))]
 
       # Concat 1st node with the path to create the full path
-      path <- paste0(pui, sub(paste0("/", st, "/"), "", var[i], fixed = TRUE))
+      if (paste0("/", st) == var[i])  path <- pui
+      else  path <- paste0(pui, sub(paste0("/", st, "/"), "", var[i], fixed = TRUE))
 
       if (verbose)  message(path)
 

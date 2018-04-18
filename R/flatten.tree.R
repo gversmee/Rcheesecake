@@ -15,7 +15,8 @@ flatten.tree <- function(env, nodelist, token, verbose = FALSE)  {
                                     return(e)
                                   } else {
                                     if (!is.null(node$status)) {
-                                      stop(paste0('There is an issue in the database with the path:\n"', e, '"\nProcess stopped. Please contact the developpers regarding this issue'), call. = FALSE)
+                                      message(paste0('!!!There is an issue in the database with the path: "', e, '"\n-> discarding path. Please contact the developpers regarding this issue!!!\n'))
+                                      return(NULL)
                                     } else return(f(sapply(node, function(n) n$pui)))
                                   }
                                 },
