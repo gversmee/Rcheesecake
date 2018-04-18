@@ -15,10 +15,12 @@ path.list <- function(env, var, token, verbose = FALSE) {
     path <- content.get(paste0(env, "/rest/v1/resourceService/find?term=", gsub("\\*", "%", basename(e))), token)
     path <- as.character(sapply(path, "[", 1))
     if (dirname(e) != ".")  path <- path[grepl(URLencode(dirname(e), reserved = TRUE), sapply(path, URLencode, reserved = TRUE))]
-    return(path)
+    if (!is.null(path))  return(path)  else return(NULL)
   })
 
-  if (!is.null(pathlist))  {
+  pathlist <- unlist(pathlist)
+
+  if (length(pathlist) != 0)  {
 
     if (verbose)  sapply(pathlist, message)
     return(unlist(pathlist))
