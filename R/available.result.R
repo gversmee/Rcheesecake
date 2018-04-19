@@ -22,7 +22,3 @@ available.result <- function(env, resultID, token, verbose = FALSE) {
   }
   if (verbose)  message("  Result available \\o/")
 }
-
-count%%1
-count
-3%%1
