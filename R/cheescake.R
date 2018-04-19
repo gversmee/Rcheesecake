@@ -95,9 +95,12 @@ picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALS
 
       if (aggregate) {
         final <- name.cols(result[[1]], verbose)
+        message("\nEnjoy!")
         print(CreateTableOne(data = result[[1]][,-1], factorVars = result[[2]]))
         return(final)
       } else {
-        return(name.cols(result, verbose))
+        final <- name.cols(result, verbose)
+        message("\nEnjoy!")
+        return(final)
       }
 }
