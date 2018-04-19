@@ -40,18 +40,18 @@ picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALS
 
   # Say hello!
   username <- data.frame(content.get(paste0(env, "/rest/v1/systemService/about"), token), stringsAsFactors = FALSE)$userid
-  message ("             ___        _ _ _            _       _           _
-            / _ \\      (_) | |          | |     | |         | |
-           / /_\\ \\_   ___| | | __ _  ___| |__   | |     __ _| |__
-           |  _  \\ \\ / / | | |/ _` |/ __| '_ \\  | |    / _` | '_ \\
-           | | | |\\ V /| | | | (_| | (__| | | | | |___| (_| | |_) |
-           \\_| |_/ \\_/ |_|_|_|\\__,_|\\___|_| |_| \\_____/\\__,_|_.__/")
+  #message ("             ___        _ _ _            _       _           _
+  #          / _ \\      (_) | |          | |     | |         | |
+  #         / /_\\ \\_   ___| | | __ _  ___| |__   | |     __ _| |__
+  #         |  _  \\ \\ / / | | |/ _` |/ __| '_ \\  | |    / _` | '_ \\
+  #         | | | |\\ V /| | | | (_| | (__| | | | | |___| (_| | |_) |
+  #         \\_| |_/ \\_/ |_|_|_|\\__,_|\\___|_| |_| \\_____/\\__,_|_.__/")
 
    if (!is.null(username)) {
      username <- unlist(strsplit(username, "@"))[1]
-     message(paste("\nHi", username, "thank you for using Rcheesecake!"))
+     message(paste("\nHi", username, "thank you for using picsuRe!"))
    } else {
-     message(paste("\nHi thank you for using Rcheesecake!"))
+     message(paste("\nHi thank you for using picsuRe!"))
    }
 
   # build the query
@@ -91,12 +91,13 @@ picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALS
       # check if categorical, and combine them
       result <- nicer.result(result, verbose, aggregate = TRUE)
 
-      # make valid column names
-      result_final <- name.cols(result$final, verbose)
-
       message("\nEnjoy!")
 
-      if (aggregate)  print(result$tableone)
-
-      return(result_final)
+      if (aggregate) {
+        final <- name.cols(result[[1]], verbose)
+        print(CreateTableOne(data = result[[1]][,-1], factorVars = factorVars))
+        return(final)
+      } else {
+        return(name.cols(result, verbose))
+      }
 }

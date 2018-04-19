@@ -41,8 +41,7 @@ nicer.result <- function(result, aggregate = TRUE, verbose = FALSE)  {
 
   colnames(final) <- cnames
 
-  if (aggregate)  tableone <- CreateTableOne(data = final[,-1], factorVars = factorVars)
+  if (aggregate)  return(list(final = final, factorVars = factorVars))  else  return(final)
 
-  return(list(final = final, tableone = tableone))
 }
 
