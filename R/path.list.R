@@ -23,7 +23,6 @@ path.list <- function(env, var, token, verbose = FALSE) {
 
   if (length(pathlist) != 0)  {
 
-    if (verbose)  sapply(pathlist, message)
     return(pathlist)
 
     } else {
