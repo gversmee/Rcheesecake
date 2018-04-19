@@ -59,9 +59,6 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
       # Get the list of "full path"
       allpaths <- path.list(env, var, token, verbose) #returns a list of path
 
-      # Get all children for each path
-      #allpaths <- system.time(flatten.tree(env, pathlist, token, verbose))
-
       # build the "where" part of the query
       where <- query.where(env, allpaths, subset, token, verbose)
 
@@ -79,13 +76,13 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
 
   # run the query
       # get the result ID
-      resultID <- result.ID(env, body, token, verbose)
+  resultID <- result.ID(env, body, token, verbose)
 
       # wait for the result to be available
-      available.result(env, resultID, token, verbose)
+  available.result(env, resultID, token, verbose)
 
       # get the response
-      result <- get.result(env, resultID, token, verbose)
+  result <- get.result(env, resultID, token, verbose)
 
   # make the table pretty!!
       # order the columns
