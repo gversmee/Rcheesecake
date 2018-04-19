@@ -46,10 +46,11 @@ picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALS
   #         |  _  \\ \\ / / | | |/ _` |/ __| '_ \\  | |    / _` | '_ \\
   #         | | | |\\ V /| | | | (_| | (__| | | | | |___| (_| | |_) |
   #         \\_| |_/ \\_/ |_|_|_|\\__,_|\\___|_| |_| \\_____/\\__,_|_.__/")
+  #\n
 
    if (!is.null(username)) {
      username <- unlist(strsplit(username, "@"))[1]
-     message(paste("\nHi", username, "thank you for using picsuRe!"))
+     message(paste("Hi", username, "thank you for using picsuRe!"))
    } else {
      message(paste("\nHi thank you for using picsuRe!"))
    }
@@ -93,7 +94,7 @@ picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALS
 
       message("\nEnjoy!")
 
-      if (aggregate) {
+      if (aggregate == TRUE) {
         final <- name.cols(result[[1]], verbose)
         message("\nEnjoy!")
         print(CreateTableOne(data = result[[1]][,-1], factorVars = result[[2]]))
