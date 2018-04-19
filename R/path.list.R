@@ -2,6 +2,8 @@
 
 path.list <- function(env, var, token, verbose = FALSE) {
 
+  cores <- parallel::detectCores()
+
   # return the list  of all paths corresponding to the variables selected
   if (verbose)  message("\nRetrieving the selected pathways:")
 
@@ -11,14 +13,13 @@ path.list <- function(env, var, token, verbose = FALSE) {
   ## new school
   if (verbose)  message('  Using the "find" function of PICSURE')
 
-  pathlist <- sapply(var, function(e) {
+  pathlist <- unlist(parallel::mclapply(var, function(e) {
     path <- content.get(paste0(env, "/rest/v1/resourceService/find?term=", gsub("\\*", "%", basename(e))), token)
     path <- as.character(sapply(path, "[", 1))
     if (dirname(e) != ".")  path <- path[grepl(URLencode(dirname(e), reserved = TRUE), sapply(path, URLencode, reserved = TRUE))]
     if (!is.null(path))  return(path)  else return(NULL)
-  })
+  }, mc.cores = getOption("mc.cores", cores)))
 
-  pathlist <- unlist(pathlist)
 
   if (length(pathlist) != 0)  {
 
