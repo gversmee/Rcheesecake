@@ -1,0 +1,521 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##   \n",
+    "# `***THE GAME***`\n",
+    "### NHANES version\n",
+    "#   \n",
+    "## INTRO - Install the required libraries"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##### We install the newly created package picsuRe to facilitate the use of the PIC-SURE API"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "Downloading GitHub repo hms-dbmi/picsuRe@master\n",
+      "from URL https://api.github.com/repos/hms-dbmi/picsuRe/zipball/master\n",
+      "Installing picsuRe\n",
+      "'/opt/conda/lib/R/bin/R' --no-site-file --no-environ --no-save --no-restore  \\\n",
+      "  --quiet CMD INSTALL  \\\n",
+      "  '/tmp/RtmpOMZR9x/devtools13666ede41a6/hms-dbmi-picsuRe-26173a4'  \\\n",
+      "  --library='/opt/conda/lib/R/library' --install-tests \n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#install.packages(\"devtools\", repos = \"http://cran.r-project.org\")\n",
+    "#install.packages(\"readr\", repos = \"http://cran.r-project.org\")\n",
+    "library(readr)\n",
+    "devtools::install_github(\"hms-dbmi/picsuRe\", force = TRUE)\n",
+    "library(picsuRe)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "\n",
+       "<table width=\"100%\" summary=\"page for picsure {picsuRe}\"><tr><td>picsure {picsuRe}</td><td style=\"text-align: right;\">R Documentation</td></tr></table>\n",
+       "\n",
+       "<h2>Query your study via the PIC-SURE API</h2>\n",
+       "\n",
+       "<h3>Description</h3>\n",
+       "\n",
+       "<p>For this beta version, it is only possible to query phenotypics data. Soon, the package will be upgraded to be able to query genotypics data from Hail.\n",
+       "</p>\n",
+       "\n",
+       "\n",
+       "<h3>Usage</h3>\n",
+       "\n",
+       "<pre>\n",
+       "picsure(env, key, var, subset = \"ALL\", gabe = FALSE, verbose = FALSE)\n",
+       "</pre>\n",
+       "\n",
+       "\n",
+       "<h3>Arguments</h3>\n",
+       "\n",
+       "<table summary=\"R argblock\">\n",
+       "<tr valign=\"top\"><td><code>env</code></td>\n",
+       "<td>\n",
+       "<p>The URL of the environment</p>\n",
+       "</td></tr>\n",
+       "<tr valign=\"top\"><td><code>key</code></td>\n",
+       "<td>\n",
+       "<p>The key or the token to log in your environment</p>\n",
+       "</td></tr>\n",
+       "<tr valign=\"top\"><td><code>var</code></td>\n",
+       "<td>\n",
+       "<p>A vector with the variables of interest. You can put a variable, or a path, as you want. You can also use the * key if you want to use a wild card. If an argument corresponds to a node, it will return all the variables below the node</p>\n",
+       "</td></tr>\n",
+       "<tr valign=\"top\"><td><code>subset</code></td>\n",
+       "<td>\n",
+       "<p>By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets. !! Similarly, the &quot;subsetting&quot; part needs to be slightly modified to handle the &quot;find&quot; function from picsure.</p>\n",
+       "</td></tr>\n",
+       "<tr valign=\"top\"><td><code>gabe</code></td>\n",
+       "<td>\n",
+       "<p>if TRUE, will export the JSON query as a query.txt file in you working directory. By default, gabe = FALSE</p>\n",
+       "</td></tr>\n",
+       "<tr valign=\"top\"><td><code>verbose</code></td>\n",
+       "<td>\n",
+       "<p>By default, verbose = FALSE. Set it to verbose = TRUE to get the log informations</p>\n",
+       "</td></tr>\n",
+       "</table>\n",
+       "\n",
+       "\n",
+       "<h3>Value</h3>\n",
+       "\n",
+       "<p>Returns a data.frame\n",
+       "</p>\n",
+       "\n",
+       "\n",
+       "<h3>Author(s)</h3>\n",
+       "\n",
+       "<p>Gregoire Versmee, Laura Versmee, Mikael Dusenne, Alba Gutierrez\n",
+       "</p>\n",
+       "\n",
+       "\n",
+       "<h3>Examples</h3>\n",
+       "\n",
+       "<pre>\n",
+       "Without any subset, will return all the patients that have at least one value for a variable of interest\n",
+       "environment &lt;- \"https://nhanes.hms.harvard.edu\"\n",
+       "key &lt;- \"yourkeyortoken\"\n",
+       "pcb &lt;- \"PCB153 (ng per g)\"\n",
+       "age &lt;- \"AGE*\"\n",
+       "sex &lt;- \"demographics/SEX\"\n",
+       "variables &lt;- c(pcb, sex, age)\n",
+       "picsure(environment, key, variables)\n",
+       "\n",
+       "Adding a variable as subset will return only the patient that have a value for this specific variable (can be combined with AND, OR, NOT)\n",
+       "subset &lt;- \"(laboratory/pcbs/PCB153 (ng per g))\"\n",
+       "picsure(environment, key, variables, subset)\n",
+       "\n",
+       "The continuous variable can be filtered by &lt;, &gt;, ==, !=, &lt;=, &gt;=.\n",
+       "subset &lt;- \"(/demographics/AGE &gt; 60) | (/demographics/AGE &lt; 20)\"\n",
+       "picsure(environment, key, variables, subset)\n",
+       "\n",
+       "</pre>\n",
+       "\n",
+       "<hr /><div style=\"text-align: center;\">[Package <em>picsuRe</em> version 0.99 ]</div>"
+      ],
+      "text/latex": [
+       "\\inputencoding{utf8}\n",
+       "\\HeaderA{picsure}{Query your study via the PIC-SURE API}{picsure}\n",
+       "%\n",
+       "\\begin{Description}\\relax\n",
+       "For this beta version, it is only possible to query phenotypics data. Soon, the package will be upgraded to be able to query genotypics data from Hail.\n",
+       "\\end{Description}\n",
+       "%\n",
+       "\\begin{Usage}\n",
+       "\\begin{verbatim}\n",
+       "picsure(env, key, var, subset = \"ALL\", gabe = FALSE, verbose = FALSE)\n",
+       "\\end{verbatim}\n",
+       "\\end{Usage}\n",
+       "%\n",
+       "\\begin{Arguments}\n",
+       "\\begin{ldescription}\n",
+       "\\item[\\code{env}] The URL of the environment\n",
+       "\n",
+       "\\item[\\code{key}] The key or the token to log in your environment\n",
+       "\n",
+       "\\item[\\code{var}] A vector with the variables of interest. You can put a variable, or a path, as you want. You can also use the * key if you want to use a wild card. If an argument corresponds to a node, it will return all the variables below the node\n",
+       "\n",
+       "\\item[\\code{subset}] By default, subset = ALL and gives you back all the patients that have at least one variable of interest. See the examples for more complex subsets. !! Similarly, the \"subsetting\" part needs to be slightly modified to handle the \"find\" function from picsure.\n",
+       "\n",
+       "\\item[\\code{gabe}] if TRUE, will export the JSON query as a query.txt file in you working directory. By default, gabe = FALSE\n",
+       "\n",
+       "\\item[\\code{verbose}] By default, verbose = FALSE. Set it to verbose = TRUE to get the log informations\n",
+       "\\end{ldescription}\n",
+       "\\end{Arguments}\n",
+       "%\n",
+       "\\begin{Value}\n",
+       "Returns a data.frame\n",
+       "\\end{Value}\n",
+       "%\n",
+       "\\begin{Author}\\relax\n",
+       "Gregoire Versmee, Laura Versmee, Mikael Dusenne, Alba Gutierrez\n",
+       "\\end{Author}\n",
+       "%\n",
+       "\\begin{Examples}\n",
+       "\\begin{ExampleCode}\n",
+       "Without any subset, will return all the patients that have at least one value for a variable of interest\n",
+       "environment <- \"https://nhanes.hms.harvard.edu\"\n",
+       "key <- \"yourkeyortoken\"\n",
+       "pcb <- \"PCB153 (ng per g)\"\n",
+       "age <- \"AGE*\"\n",
+       "sex <- \"demographics/SEX\"\n",
+       "variables <- c(pcb, sex, age)\n",
+       "picsure(environment, key, variables)\n",
+       "\n",
+       "Adding a variable as subset will return only the patient that have a value for this specific variable (can be combined with AND, OR, NOT)\n",
+       "subset <- \"(laboratory/pcbs/PCB153 (ng per g))\"\n",
+       "picsure(environment, key, variables, subset)\n",
+       "\n",
+       "The continuous variable can be filtered by <, >, ==, !=, <=, >=.\n",
+       "subset <- \"(/demographics/AGE > 60) | (/demographics/AGE < 20)\"\n",
+       "picsure(environment, key, variables, subset)\n",
+       "\n",
+       "\\end{ExampleCode}\n",
+       "\\end{Examples}"
+      ],
+      "text/plain": [
+       "picsure                package:picsuRe                 R Documentation\n",
+       "\n",
+       "_\bQ_\bu_\be_\br_\by _\by_\bo_\bu_\br _\bs_\bt_\bu_\bd_\by _\bv_\bi_\ba _\bt_\bh_\be _\bP_\bI_\bC-_\bS_\bU_\bR_\bE _\bA_\bP_\bI\n",
+       "\n",
+       "_\bD_\be_\bs_\bc_\br_\bi_\bp_\bt_\bi_\bo_\bn:\n",
+       "\n",
+       "     For this beta version, it is only possible to query phenotypics\n",
+       "     data. Soon, the package will be upgraded to be able to query\n",
+       "     genotypics data from Hail.\n",
+       "\n",
+       "_\bU_\bs_\ba_\bg_\be:\n",
+       "\n",
+       "     picsure(env, key, var, subset = \"ALL\", gabe = FALSE, verbose = FALSE)\n",
+       "     \n",
+       "_\bA_\br_\bg_\bu_\bm_\be_\bn_\bt_\bs:\n",
+       "\n",
+       "     env: The URL of the environment\n",
+       "\n",
+       "     key: The key or the token to log in your environment\n",
+       "\n",
+       "     var: A vector with the variables of interest. You can put a\n",
+       "          variable, or a path, as you want. You can also use the * key\n",
+       "          if you want to use a wild card. If an argument corresponds to\n",
+       "          a node, it will return all the variables below the node\n",
+       "\n",
+       "  subset: By default, subset = ALL and gives you back all the patients\n",
+       "          that have at least one variable of interest. See the examples\n",
+       "          for more complex subsets. !! Similarly, the \"subsetting\" part\n",
+       "          needs to be slightly modified to handle the \"find\" function\n",
+       "          from picsure.\n",
+       "\n",
+       "    gabe: if TRUE, will export the JSON query as a query.txt file in\n",
+       "          you working directory. By default, gabe = FALSE\n",
+       "\n",
+       " verbose: By default, verbose = FALSE. Set it to verbose = TRUE to get\n",
+       "          the log informations\n",
+       "\n",
+       "_\bV_\ba_\bl_\bu_\be:\n",
+       "\n",
+       "     Returns a data.frame\n",
+       "\n",
+       "_\bA_\bu_\bt_\bh_\bo_\br(_\bs):\n",
+       "\n",
+       "     Gregoire Versmee, Laura Versmee, Mikael Dusenne, Alba Gutierrez\n",
+       "\n",
+       "_\bE_\bx_\ba_\bm_\bp_\bl_\be_\bs:\n",
+       "\n",
+       "     Without any subset, will return all the patients that have at least one value for a variable of interest\n",
+       "     environment <- \"https://nhanes.hms.harvard.edu\"\n",
+       "     key <- \"yourkeyortoken\"\n",
+       "     pcb <- \"PCB153 (ng per g)\"\n",
+       "     age <- \"AGE*\"\n",
+       "     sex <- \"demographics/SEX\"\n",
+       "     variables <- c(pcb, sex, age)\n",
+       "     picsure(environment, key, variables)\n",
+       "     \n",
+       "     Adding a variable as subset will return only the patient that have a value for this specific variable (can be combined with AND, OR, NOT)\n",
+       "     subset <- \"(laboratory/pcbs/PCB153 (ng per g))\"\n",
+       "     picsure(environment, key, variables, subset)\n",
+       "     \n",
+       "     The continuous variable can be filtered by <, >, ==, !=, <=, >=.\n",
+       "     subset <- \"(/demographics/AGE > 60) | (/demographics/AGE < 20)\"\n",
+       "     picsure(environment, key, variables, subset)\n",
+       "     "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "?picsure"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 1. Build a query to get the data you are interested in studying\n",
+    "### 1.a Use the picsuRe package to query the data\n",
+    "\n",
+    "Here, we just set up the environment, the key"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "environment <- \"https://nhanes.hms.harvard.edu\"\n",
+    "key <- \"gqqekdc65vq12886ksod6f988l\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We choose the path to the variables of interest"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "pcb <- \"laboratory/pcbs/PCB153 (ng per g)\"\n",
+    "age <- \"demographics/AGE/\"\n",
+    "sex <- \"demographics/SEX\"\n",
+    "variables <- c(pcb, sex, age)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### We use picsuRe to build the query"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "Key detected, starting a session on https://nhanes.hms.harvard.edu\n",
+      "             ___        _ _ _            _       _           _\n",
+      "            / _ \\      (_) | |          | |     | |         | |\n",
+      "           / /_\\ \\_   ___| | | __ _  ___| |__   | |     __ _| |__\n",
+      "           |  _  \\ \\ / / | | |/ _` |/ __| '_ \\  | |    / _` | '_ \\\n",
+      "           | | | |\\ V /| | | | (_| | (__| | | | | |___| (_| | |_) |\n",
+      "           \\_| |_/ \\_/ |_|_|_|\\__,_|\\___|_| |_| \\_____/\\__,_|_.__/\n",
+      "\n",
+      "Hi publicuser thank you for using Rcheesecake!\n",
+      "\n",
+      "Retrieving the selected pathways:\n",
+      "  Using the \"find\" function of PICSURE\n",
+      "/i2b2-nhanes/Demo/laboratory/laboratory/pcbs/PCB153 (ng per g)/\n",
+      "/i2b2-nhanes/Demo/demographics/demographics/SEX/\n",
+      "/i2b2-nhanes/Demo/demographics/demographics/AGE/\n",
+      "\n",
+      "Retrieving all variables associated with those pathways:\n",
+      "/i2b2-nhanes/Demo/laboratory/laboratory/pcbs/PCB153 (ng per g)/\n",
+      "/i2b2-nhanes/Demo/demographics/demographics/SEX/female/\n",
+      "/i2b2-nhanes/Demo/demographics/demographics/SEX/male/\n",
+      "/i2b2-nhanes/Demo/demographics/demographics/AGE/\n",
+      "\n",
+      "Building the \"select\" part of the query\n",
+      "\n",
+      "Building the \"where\" part of the query\n",
+      "  default subset = \"ALL\"\n",
+      "  -> will look for all the patients that have a value for at list one of the variable selected\n",
+      "\n",
+      "Combining the \"select\" and \"where\" part of the query to build the json body\n",
+      "\n",
+      "Getting a result ID\n",
+      "  -> Query #233677\n",
+      "\n",
+      "Waiting for PIC-SURE to return the query\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n",
+      "  ...still waiting\n"
+     ]
+    },
+    {
+     "ename": "ERROR",
+     "evalue": "Error: Query Failed\n",
+     "output_type": "error",
+     "traceback": [
+      "Error: Query Failed\nTraceback:\n",
+      "1. system.time(test1 <- picsure(environment, key, variables, verbose = TRUE))",
+      "2. picsure(environment, key, variables, verbose = TRUE)",
+      "3. available.result(env, resultID, token, verbose)",
+      "4. stop(\"Query Failed\", call. = FALSE)"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Timing stopped at: 1.405 0.019 110.998 \n"
+     ]
+    }
+   ],
+   "source": [
+    "system.time(test1 <- picsure(environment, key, variables, verbose = TRUE))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "It's as simple as that. You can see that the columns are ordered in the same order as the one we selected our variables. By default, it will return all patients having one of the variables."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "ename": "ERROR",
+     "evalue": "Error in head(test1): object 'test1' not found\n",
+     "output_type": "error",
+     "traceback": [
+      "Error in head(test1): object 'test1' not found\nTraceback:\n",
+      "1. head(test1)"
+     ]
+    }
+   ],
+   "source": [
+    "head(test1)\n",
+    "nrow(test1)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "R",
+   "language": "R",
+   "name": "ir"
+  },
+  "language_info": {
+   "codemirror_mode": "r",
+   "file_extension": ".r",
+   "mimetype": "text/x-r-source",
+   "name": "R",
+   "pygments_lexer": "r",
+   "version": "3.3.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
