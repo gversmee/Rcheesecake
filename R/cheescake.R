@@ -57,7 +57,7 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
   # build the query
     # build the "select" part of the query
       # Get the list of "full path"
-      pathlist <- path.list(env, var, token, verbose) #returns a list of path
+      allpaths <- path.list(env, var, token, verbose) #returns a list of path
 
       # Get all children for each path
       #allpaths <- system.time(flatten.tree(env, pathlist, token, verbose))
