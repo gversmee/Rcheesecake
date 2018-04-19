@@ -29,7 +29,7 @@
 #'
 #' @import httr
 
-picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALSE, verbose = FALSE) {
+picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE) {
 
   # Is it a key or a token?
   if (nchar(key) < 27)  {
@@ -52,7 +52,7 @@ picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALS
      username <- unlist(strsplit(username, "@"))[1]
      message(paste("Hi", username, "thank you for using picsuRe!"))
    } else {
-     message(paste("\nHi thank you for using picsuRe!"))
+     message(paste("Hi thank you for using picsuRe!"))
    }
 
   # build the query
@@ -90,18 +90,12 @@ picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALS
       result <- order.col(result, allpaths, verbose)
 
       # check if categorical, and combine them
-      result <- nicer.result(result, verbose, aggregate = TRUE)
+      result <- nicer.result(result, verbose)
+
+      # make valid column names
+      result <- name.cols(result, verbose)
 
       message("\nEnjoy!")
 
-      if (aggregate == TRUE) {
-        final <- name.cols(result[[1]], verbose)
-        message("\nEnjoy!")
-        print(CreateTableOne(data = result[[1]][,-1], factorVars = result[[2]]))
-        return(final)
-      } else {
-        final <- name.cols(result, verbose)
-        message("\nEnjoy!")
-        return(final)
-      }
+      return(result)
 }

@@ -17,7 +17,6 @@ nicer.result <- function(result, aggregate = TRUE, verbose = FALSE)  {
 
   final <- result[1]
   cnames <- c("Patient_id")
-  factorVars <- c()
 
   for (i in 2:length(groups2))  {
     subdf <- result[which(groups == groups2[i])]
@@ -29,7 +28,6 @@ nicer.result <- function(result, aggregate = TRUE, verbose = FALSE)  {
       split <- unlist(strsplit(colnames(subdf), "/"))
       code <- split[length(split)-1]
       cnames <- c(cnames, code)
-      factorVars <- c(factorVars, code)
 
     } else {
       final <- cbind(final, subdf)
@@ -41,7 +39,6 @@ nicer.result <- function(result, aggregate = TRUE, verbose = FALSE)  {
 
   colnames(final) <- cnames
 
-  if (aggregate)  return(list(final = final, factorVars = factorVars))  else  return(final)
-
+  return(final)
 }
 
