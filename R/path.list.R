@@ -12,13 +12,13 @@ path.list <- function(env, var, token, verbose = FALSE) {
   if (verbose)  message('  Using the "find" function of PICSURE')
 
 
-  pathlist <- unlist(parallel::mclapply(var, function(e) {
+  pathlist <- unlist(lapply(var, function(e) {
     path <- content.get(paste0(env, "/rest/v1/resourceService/find?term=", gsub("\\*", "%", basename(e))), token)
     path <- as.character(sapply(path, "[", 1))
     if (dirname(e) != ".")  path <- path[grepl(URLencode(dirname(e), reserved = TRUE), sapply(path, URLencode, reserved = TRUE))]
     if (is.null(path))  return(NULL)
     else return(flatten.tree(env, path, token, verbose))
-  }, mc.cores = getOption("mc.cores", parallel::detectCores())))
+  }))
 
 
   if (length(pathlist) != 0)  {

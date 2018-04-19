@@ -4,7 +4,8 @@
 \alias{picsure}
 \title{Query your study via the PIC-SURE API}
 \usage{
-picsure(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE)
+picsure(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALSE,
+  verbose = FALSE)
 }
 \arguments{
 \item{env}{The URL of the environment}

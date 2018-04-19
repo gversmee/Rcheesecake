@@ -29,7 +29,7 @@
 #'
 #' @import httr
 
-picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE) {
+picsure <- function(env, key, var, subset = "ALL", aggregate = TRUE, gabe = FALSE, verbose = FALSE) {
 
   # Is it a key or a token?
   if (nchar(key) < 27)  {
@@ -89,12 +89,14 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
       result <- order.col(result, allpaths, verbose)
 
       # check if categorical, and combine them
-      result <- nicer.result(result, verbose)
+      result <- nicer.result(result, verbose, aggregate = TRUE)
 
       # make valid column names
-      result <- name.cols(result, verbose)
+      result_final <- name.cols(result$final, verbose)
 
       message("\nEnjoy!")
 
-      return(result)
+      if (aggregate)  print(result$tableone)
+
+      return(result_final)
 }

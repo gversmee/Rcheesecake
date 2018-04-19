@@ -1,6 +1,6 @@
 #' @author Gregoire Versmee, Laura Versmee, Mikael Dusenne
 
-nicer.result <- function(result, verbose = FALSE)  {
+nicer.result <- function(result, aggregate = TRUE, verbose = FALSE)  {
 
   if (verbose)  message("  combining the categorical variables")
 
@@ -17,6 +17,7 @@ nicer.result <- function(result, verbose = FALSE)  {
 
   final <- result[1]
   cnames <- c("Patient_id")
+  factorVars <- c()
 
   for (i in 2:length(groups2))  {
     subdf <- result[which(groups == groups2[i])]
@@ -28,6 +29,7 @@ nicer.result <- function(result, verbose = FALSE)  {
       split <- unlist(strsplit(colnames(subdf), "/"))
       code <- split[length(split)-1]
       cnames <- c(cnames, code)
+      factorVars <- c(factorVars, code)
 
     } else {
       final <- cbind(final, subdf)
@@ -39,6 +41,8 @@ nicer.result <- function(result, verbose = FALSE)  {
 
   colnames(final) <- cnames
 
-  return(final)
+  if (aggregate)  tableone <- CreateTableOne(data = dt[,-1], factorVars = catVars)
+
+  return(list(final = final, tableone = tableone))
 }
 
