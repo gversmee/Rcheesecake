@@ -4,7 +4,7 @@ available.result <- function(env, resultID, token, verbose = FALSE) {
 
   count <- 0L
 
-  if (verbose)  message("\nWaiting for PIC-SURE to return the query")
+  message("\nWaiting for PIC-SURE to return the query")
 
   status <- content.get(paste0(env, "/rest/v1/resultService/resultStatus/", resultID), token)$status
 
