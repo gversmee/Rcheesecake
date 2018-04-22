@@ -40,33 +40,31 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
 
   # Say hello!
   username <- data.frame(content.get(paste0(env, "/rest/v1/systemService/about"), token), stringsAsFactors = FALSE)$userid
-  message ("             ___        _ _ _            _       _           _
-            / _ \\      (_) | |          | |     | |         | |
-           / /_\\ \\_   ___| | | __ _  ___| |__   | |     __ _| |__
-           |  _  \\ \\ / / | | |/ _` |/ __| '_ \\  | |    / _` | '_ \\
-           | | | |\\ V /| | | | (_| | (__| | | | | |___| (_| | |_) |
-           \\_| |_/ \\_/ |_|_|_|\\__,_|\\___|_| |_| \\_____/\\__,_|_.__/")
+  #message ("             ___        _ _ _            _       _           _
+  #          / _ \\      (_) | |          | |     | |         | |
+  #         / /_\\ \\_   ___| | | __ _  ___| |__   | |     __ _| |__
+  #         |  _  \\ \\ / / | | |/ _` |/ __| '_ \\  | |    / _` | '_ \\
+  #         | | | |\\ V /| | | | (_| | (__| | | | | |___| (_| | |_) |
+  #         \\_| |_/ \\_/ |_|_|_|\\__,_|\\___|_| |_| \\_____/\\__,_|_.__/")
+  #\n
 
    if (!is.null(username)) {
      username <- unlist(strsplit(username, "@"))[1]
-     message(paste("\nHi", username, "thank you for using Rcheesecake!"))
+     message(paste("Hi", username, "thank you for using picsuRe!"))
    } else {
-     message(paste("\nHi thank you for using Rcheesecake!"))
+     message(paste("Hi thank you for using picsuRe!"))
    }
 
   # build the query
     # build the "select" part of the query
       # Get the list of "full path"
-      pathlist <- path.list(env, var, token, verbose) #returns a list of path
+      allpaths <- path.list(env, var, token, verbose) #returns a list of path
 
-      # Get all children for each path
-      allpaths <- flatten.tree(env, pathlist, token, verbose)
+      # build the "where" part of the query
+      where <- query.where(env, allpaths, subset, token, verbose)
 
       # build the "select" part of the query
       select <- query.select(allpaths, verbose)
-
-    # build the "where" part of the query
-      where <- query.where(env, allpaths, subset, token, verbose)
 
     # combine select and where
       if (verbose)  message('\nCombining the "select" and "where" part of the query to build the json body')
@@ -79,13 +77,13 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
 
   # run the query
       # get the result ID
-      resultID <- result.ID(env, body, token, verbose)
+  resultID <- result.ID(env, body, token, verbose)
 
       # wait for the result to be available
-      available.result(env, resultID, token, verbose)
+  available.result(env, resultID, token, verbose)
 
       # get the response
-      result <- get.result(env, resultID, token, verbose)
+  result <- get.result(env, resultID, allpaths, token, verbose)
 
   # make the table pretty!!
       # order the columns
@@ -97,7 +95,7 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
       # make valid column names
       result <- name.cols(result, verbose)
 
-      message("\nEnjoy!")
+      message(paste("\nThe data.frame downloaded contains", nrow(result), "observations of", ncol(result), "variables. Its size is", format(object.size(result), units = "Kb")))
 
       return(result)
 }

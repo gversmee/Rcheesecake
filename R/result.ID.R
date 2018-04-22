@@ -2,7 +2,7 @@
 
 result.ID <- function(env, body, token, verbose = FALSE) {
 
-  if (verbose == TRUE)  message('\nGetting a result ID')
+  if (verbose)  message('\nGetting a result ID')
 
   ID <- httr::content(httr::POST(paste0(env, "/rest/v1/queryService/runQuery"), body = body))$resultId
 
@@ -13,6 +13,6 @@ result.ID <- function(env, body, token, verbose = FALSE) {
     else stop("\nInvalid query, process stopped", call. = FALSE)
   }
 
-  if (verbose == TRUE)  message(paste0("  -> Query #", ID))
+  if (verbose)  message(paste0("  -> Query #", ID))
   return(ID)
 }
