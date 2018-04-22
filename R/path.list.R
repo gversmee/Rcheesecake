@@ -11,15 +11,18 @@ path.list <- function(env, var, token, verbose = FALSE) {
   ## new school
   if (verbose)  message('  Using the "find" function of PICSURE')
 
-
   pathlist <- unlist(lapply(var, function(e) {
     path <- content.get(paste0(env, "/rest/v1/resourceService/find?term=", gsub("\\*", "%", basename(e))), token)
     path <- as.character(sapply(path, "[", 1))
     if (dirname(e) != ".")  path <- path[grepl(URLencode(dirname(e), reserved = TRUE), sapply(path, URLencode, reserved = TRUE))]
     if (is.null(path))  return(NULL)
-    else return(flatten.tree(env, path, token, verbose))
+    else {
+      if (verbose)  message(paste0("\nRetrieving all variables associated with the pathway:", e))
+      plist <- flatten.tree(env, path, token, verbose)
+      names(plist) <- rep(names(var), length(plist))
+      return(plist)
+    }
   }))
-
 
   if (length(pathlist) != 0)  {
 
@@ -28,6 +31,7 @@ path.list <- function(env, var, token, verbose = FALSE) {
     } else {
 
     if (verbose) message('  No path found using the "find" function, trying the old-fasion way')
+
 
     ## go old school
     pathlist <- c()

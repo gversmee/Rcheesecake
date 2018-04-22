@@ -9,7 +9,7 @@ flatten.tree <- function(env, nodelist, token, verbose = FALSE)  {
 
   f <- function(l)  {
     unlist(sapply(l,
-                  function(e)  {node <- fetchNode(e)
+                  function(e)  {  node <- fetchNode(e)
                                   if(length(node) == 0)  {
                                     if (verbose)  message(e)
                                     return(e)
@@ -18,7 +18,6 @@ flatten.tree <- function(env, nodelist, token, verbose = FALSE)  {
                                       message(paste0('!!!There is an issue in the database with the path: "', e, '"\n-> discarding path. Please contact the developpers regarding this issue!!!\n'))
                                       return(NULL)
                                     } else {
-                                      if (verbose)  message(paste0("\nRetrieving all variables associated with the pathway:", e))
                                       return(f(sapply(node, function(n) n$pui)))
                                     }
                                   }

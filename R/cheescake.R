@@ -83,7 +83,7 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
   available.result(env, resultID, token, verbose)
 
       # get the response
-  result <- get.result(env, resultID, token, verbose)
+  result <- get.result(env, resultID, allpaths, token, verbose)
 
   # make the table pretty!!
       # order the columns
@@ -95,7 +95,7 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
       # make valid column names
       result <- name.cols(result, verbose)
 
-      message("\nEnjoy!")
+      message(paste("\nThe data.frame downloaded contains", nrow(result), "observations of", ncol(result), "variables. Its size is", format(object.size(result), units = "Kb")))
 
       return(result)
 }
