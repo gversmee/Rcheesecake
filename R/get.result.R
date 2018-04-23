@@ -18,7 +18,9 @@ get.result <- function(env, resultID, allpaths, token, verbose = FALSE) {
 
   colnames(result) <- c(colnames(df), allpaths[!(allpaths %in% colnames(df))])
 
-  return(result)
+  if (verbose)  message("\nMaking the dataframe pretty\n  ordering the columns according to the order of the variables you selected")
+
+  return(result[c(1, sapply(allpaths, grep, colnames(result), fixed = TRUE))])
 
 }
 
