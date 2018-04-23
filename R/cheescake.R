@@ -87,7 +87,7 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
 
   # make the table pretty!!
       # order the columns
-      result <- order.col(result, allpaths, verbose)
+      #result <- order.col(result, allpaths, verbose)
 
       # check if categorical, and combine them
       result <- nicer.result(result, verbose)
