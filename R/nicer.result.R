@@ -19,7 +19,7 @@ nicer.result <- function(result, allpaths, verbose = FALSE)  {
       if (!is.null(names(groups2))  if (names(groups2[i]) == "")  cnames <- c(cnames, basename(dirname(colnames(subdf)[1])))  else cnames <- c(cnames, names(groups2[i]))
     } else {
       final <- cbind(final, subdf)
-      if (!is.null(names(groups2))  if (names(groups2[i]) == ""  & !is.null(names(groups2)))  cnames <- c(cnames, basename(colnames(subdf)))  else  cnames <- c(cnames, names(groups2[i]))
+      if (!is.null(names(groups2))  if (names(groups2[i]) == "")  cnames <- c(cnames, basename(colnames(subdf)))  else  cnames <- c(cnames, names(groups2[i]))
     }
   }
 
