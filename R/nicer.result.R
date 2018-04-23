@@ -17,7 +17,7 @@ nicer.result <- function(result, allpaths, verbose = FALSE)  {
       subdf[is.na(subdf)] <- ""
       final <- cbind(final, as.factor(apply(subdf, 1, paste0, collapse = "")))
       if (!is.null(names(groups2)))  {
-          if (names(groups2[i]) == "")  else  cnames <- c(cnames, names(groups2[i]))
+          if (names(groups2[i]) == "")  cnames <- c(cnames, basename(dirname(colnames(subdf)[1])))  else  cnames <- c(cnames, names(groups2[i]))
         } else  cnames <- c(cnames, basename(dirname(colnames(subdf)[1])))
 
     } else {
