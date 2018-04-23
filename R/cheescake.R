@@ -66,7 +66,8 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
         return(x)
       }
 
-      allpaths <- unlist(mapply(naming, pathlist, names(var)))
+      if (is.null(names(var)))  allpaths <- unlist(pathlist)
+      else  allpaths <- unlist(mapply(naming, pathlist, names(var)))
 
       # build the "where" part of the query
       where <- query.where(env, allpaths, subset, token, verbose)
