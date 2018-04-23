@@ -11,21 +11,21 @@ path.list <- function(env, var, token, verbose = FALSE) {
   ## new school
   if (verbose)  message('  Using the "find" function of PICSURE')
 
-  pathlist <- unlist(lapply(var, function(e) {
+  pathlist <- lapply(var, function(e) {
     path <- content.get(paste0(env, "/rest/v1/resourceService/find?term=", gsub("\\*", "%", basename(e))), token)
-    path <- as.character(sapply(path, "[", 1))
+    path <- as.character(sapply(path, "[", "pui"))
     if (dirname(e) != ".")  path <- path[grepl(URLencode(dirname(e), reserved = TRUE), sapply(path, URLencode, reserved = TRUE))]
-    if (is.null(path))  return(NULL)
-    else {
-      if (verbose)  message(paste0("\nRetrieving all variables associated with the pathway:", e))
+    if (all(is.na(path))) {
+      message(paste0("\nNo variables associated with: ", e, ", please check the spelling."))
+      next
+    } else {
+      if (verbose)  message(paste0("\nRetrieving all variables associated with: ", e))
       plist <- flatten.tree(env, path, token, verbose)
-      names(plist) <- rep(names(var), length(plist))
       return(plist)
     }
-  }))
+  })
 
   if (length(pathlist) != 0)  {
-
     return(pathlist)
 
     } else {
@@ -34,7 +34,7 @@ path.list <- function(env, var, token, verbose = FALSE) {
 
 
     ## go old school
-    pathlist <- c()
+    pathlist <- list()
     for (i in 1:length(var))  {
 
       end <- nchar(var[i])
@@ -72,7 +72,7 @@ path.list <- function(env, var, token, verbose = FALSE) {
       if (verbose)  message(path)
 
       # Add to pathlist
-      pathlist <- c(pathlist, path)
+      pathlist <- list(pathlist, path)
     }
     if (!is.null(pathlist))  message('!!!!! Please ask the developper to install the "find" function on your PICSURE environment in order to speed up the query process !!!!!')
     return(flatten.tree(env, path, token, verbose))

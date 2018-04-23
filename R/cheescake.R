@@ -58,7 +58,15 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
   # build the query
     # build the "select" part of the query
       # Get the list of "full path"
-      allpaths <- path.list(env, var, token, verbose) #returns a list of path
+      pathlist <- path.list(env, var, token, verbose) #returns a list of path
+
+      # Apply the name of each variable to each path
+      naming <- function(x, y) {
+        names(x) <- rep(y, length(x))
+        return(x)
+      }
+
+      allpaths <- unlist(mapply(naming, pathlist, names(var)))
 
       # build the "where" part of the query
       where <- query.where(env, allpaths, subset, token, verbose)
@@ -82,15 +90,12 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
       # wait for the result to be available
   available.result(env, resultID, token, verbose)
 
-      # get the response
-  result <- get.result(env, resultID, allpaths, token, verbose)
-
   # make the table pretty!!
-      # order the columns
-      #result <- order.col(result, allpaths, verbose)
+      # get the response
+      result <- get.result(env, resultID, allpaths, token, verbose)
 
       # check if categorical, and combine them
-      result <- nicer.result(result, verbose)
+      result <- nicer.result(result, allpaths, verbose)
 
       # make valid column names
       result <- name.cols(result, verbose)
