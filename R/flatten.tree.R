@@ -10,7 +10,7 @@ flatten.tree <- function(env, nodelist, token, verbose = FALSE)  {
   f <- function(l)  {
     unlist(sapply(l,
                   function(e)  {
-                                  if (content.get(paste0(env, "/rest/v1/resourceService/path", gsub("\\?", "%3F", e)), token, status = TRUE)) == 404 {
+                                  if (content.get(paste0(env, "/rest/v1/resourceService/path", gsub("\\?", "%3F", e)), token, status = TRUE) == 404) {
                                     message(paste0('!!!There is an issue in the database with the path: "', e, '"\n-> discarding path. Please contact the developpers regarding this issue!!!\n'))
                                     return(NULL)
                                   }
