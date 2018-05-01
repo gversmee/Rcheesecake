@@ -41,7 +41,7 @@ picsure <- function(env, key, var, subset = "ALL", gabe = FALSE, verbose = FALSE
   # Check the token and say hello!
   about <- data.frame(content.get(paste0(env, "/rest/v1/systemService/about"), token), stringsAsFactors = FALSE)
   username <- about$userid
-  if (!is.null(about$message))  stop("Token is invalid, please request a new one.")
+  if (!is.null(about$message))  stop("Token is invalid, please request a new one.", call. = FALSE)
 
   #message ("             ___        _ _ _            _       _           _
   #          / _ \\      (_) | |          | |     | |         | |
